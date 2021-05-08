@@ -3,8 +3,13 @@
     <div v-for="memo in memos" :key="memo.id">
       <p @click="show(memo)">{{ memo.title }}</p>
     </div>
+    <p @click="add">+</p>
     <textarea v-model="memo" rows="15" cols="40"></textarea>
-    <button @click="addMemo">Add memo</button>
+    <button @click="addMemo" v-if="status === 'new'">追加</button>
+    <template v-else-if="status === 'edit'">
+      <button>編集</button>
+      <button>削除</button>
+    </template>
   </div>
 </template>
 
@@ -15,14 +20,15 @@ export default {
     return {
       memos: [],
       memo: '',
-      id: 0
+      id: 1,
+      status: false
     }
   },
   mounted() {
     if (localStorage.getItem('memos')) {
       this.memos = JSON.parse(localStorage.getItem('memos'));
       let ids = this.memos.map(memo => memo.id)
-      this.id = ids.reduce((a, b) => Math.max(a, b));
+      this.id = ids.reduce((a, b) => Math.max(a, b)) + 1;
     }
   },
   methods: {
@@ -31,7 +37,7 @@ export default {
         return;
       }
       let title = this.memo.split('\n')[0]
-      this.memos.push({id: this.id + 1, title: title, body: this.memo});
+      this.memos.push({id: this.id, title: title, body: this.memo});
       this.memo = '';
       this.id++
       this.saveMemos();
@@ -41,7 +47,12 @@ export default {
       localStorage.setItem('memos', parsed);
     },
     show(memo) {
-      this.memo = memo.body
+      this.memo = memo.body;
+      this.status = 'edit'
+    },
+    add() {
+      this.status = 'new';
+      this.memo = ''
     }
   }
 }
