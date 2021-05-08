@@ -7,8 +7,8 @@
     <textarea v-model="memo" rows="15" cols="40"></textarea>
     <button @click="addMemo" v-if="status === 'new'">追加</button>
     <template v-else-if="status === 'edit'">
-      <button>編集</button>
-      <button>削除</button>
+      <button @click="update">更新</button>
+      <button @click="remove">削除</button>
     </template>
   </div>
 </template>
@@ -21,7 +21,8 @@ export default {
       memos: [],
       memo: '',
       id: 1,
-      status: false
+      status: false,
+      editId: null
     }
   },
   mounted() {
@@ -48,11 +49,25 @@ export default {
     },
     show(memo) {
       this.memo = memo.body;
+      this.editId = memo.id
       this.status = 'edit'
     },
     add() {
       this.status = 'new';
-      this.memo = ''
+      this.memo = '';
+    },
+    update() {
+      let title = this.memo.split('\n')[0];
+      let index = this.memos.map(memo => memo.id).indexOf(this.editId);
+      this.memos[index] = {id: index, title: title, body: this.memo};
+      this.saveMemos();
+    },
+    remove() {
+      let index = this.memos.map(memo => memo.id).indexOf(this.editId);
+      this.memos.splice(index, 1);
+      this.saveMemos();
+      this.memo = '';
+      this.status = false;
     }
   }
 }
