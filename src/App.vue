@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div v-for="memo in memos" :key="memo.id">
+      <p @click="show(memo)">{{ memo.title }}</p>
+    </div>
     <textarea v-model="memo" rows="15" cols="40"></textarea>
     <button @click="addMemo">Add memo</button>
   </div>
@@ -27,7 +30,8 @@ export default {
       if (!this.memo) {
         return;
       }
-      this.memos.push({id: this.id + 1, body: this.memo});
+      let title = this.memo.split('\n')[0]
+      this.memos.push({id: this.id + 1, title: title, body: this.memo});
       this.memo = '';
       this.id++
       this.saveMemos();
@@ -36,6 +40,9 @@ export default {
       let parsed = JSON.stringify(this.memos);
       localStorage.setItem('memos', parsed);
     },
+    show(memo) {
+      this.memo = memo.body
+    }
   }
 }
 </script>
