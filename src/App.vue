@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <myform></myform>
+    <myheader />
+    <myform />
   </div>
 </template>
 
 <script>
 import myform from "@/components/myform";
+import myheader from "@/components/myheader";
 
 export default {
   components: {
-    myform
-  },
-  data() {
-  },
-  methods: {
+    myform,
+    myheader
   }
 }
 </script>

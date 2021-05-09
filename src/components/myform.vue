@@ -8,7 +8,7 @@
       <p @click="add">+</p>
     </div>
     <div class="form_with_button">
-      <textarea v-model="memo" rows="12" cols="30"></textarea>
+      <textarea v-model="memo" rows="12" cols="30" v-if="status"></textarea>
       <br>
       <button @click="addMemo" v-if="status === 'new'">追加</button>
       <template v-else-if="status === 'edit'">
@@ -46,11 +46,11 @@ export default {
       let title = this.memo.split('\n')[0]
       if (this.memos[0]) {
         let ids = this.memos.map(memo => memo.id)
-        this.id = ids.reduce((a, b) => Math.max(a, b)) + 1
+        this.id = ids.reduce((a, b) => Math.max(a, b)) + 1;
       }
       this.memos.push({id: this.id, title: title, body: this.memo});
       this.memo = '';
-      this.id++
+      this.id++;
       this.saveMemos();
     },
     saveMemos() {
@@ -60,20 +60,23 @@ export default {
     show(memo) {
       this.memo = memo.body;
       this.editId = memo.id
-      this.status = 'edit'
+      this.status = 'edit';
     },
     add() {
       this.status = 'new';
       this.memo = '';
     },
+    getIndex() {
+      return this.memos.findIndex(memo => memo.id === this.editId);
+    },
     update() {
       let title = this.memo.split('\n')[0];
-      let index = this.memos.findIndex(memo => memo.id === this.editId);
+      let index = this.getIndex();
       this.memos[index] = {id: index, title: title, body: this.memo};
       this.saveMemos();
     },
     remove() {
-      let index = this.memos.findIndex(memo => memo.id === this.editId);
+      let index = this.getIndex();
       this.memos.splice(index, 1);
       this.saveMemos();
       this.memo = '';
