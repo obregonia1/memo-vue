@@ -1,74 +1,19 @@
 <template>
   <div id="app">
-    <div v-for="memo in memos" :key="memo.id">
-      <p @click="show(memo)">{{ memo.title }}</p>
-    </div>
-    <p @click="add">+</p>
-    <textarea v-model="memo" rows="15" cols="40"></textarea>
-    <button @click="addMemo" v-if="status === 'new'">追加</button>
-    <template v-else-if="status === 'edit'">
-      <button @click="update">更新</button>
-      <button @click="remove">削除</button>
-    </template>
+    <myform></myform>
   </div>
 </template>
 
 <script>
+import myform from "@/components/myform";
+
 export default {
-  components: {},
-  data() {
-    return {
-      memos: [],
-      memo: '',
-      id: 1,
-      status: false,
-      editId: null
-    }
+  components: {
+    myform
   },
-  mounted() {
-    if (localStorage.getItem('memos')) {
-      this.memos = JSON.parse(localStorage.getItem('memos'));
-      let ids = this.memos.map(memo => memo.id)
-      this.id = ids.reduce((a, b) => Math.max(a, b)) + 1;
-    }
+  data() {
   },
   methods: {
-    addMemo() {
-      if (!this.memo) {
-        return;
-      }
-      let title = this.memo.split('\n')[0]
-      this.memos.push({id: this.id, title: title, body: this.memo});
-      this.memo = '';
-      this.id++
-      this.saveMemos();
-    },
-    saveMemos() {
-      let parsed = JSON.stringify(this.memos);
-      localStorage.setItem('memos', parsed);
-    },
-    show(memo) {
-      this.memo = memo.body;
-      this.editId = memo.id
-      this.status = 'edit'
-    },
-    add() {
-      this.status = 'new';
-      this.memo = '';
-    },
-    update() {
-      let title = this.memo.split('\n')[0];
-      let index = this.memos.map(memo => memo.id).indexOf(this.editId);
-      this.memos[index] = {id: index, title: title, body: this.memo};
-      this.saveMemos();
-    },
-    remove() {
-      let index = this.memos.map(memo => memo.id).indexOf(this.editId);
-      this.memos.splice(index, 1);
-      this.saveMemos();
-      this.memo = '';
-      this.status = false;
-    }
   }
 }
 </script>
