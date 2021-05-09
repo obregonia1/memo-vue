@@ -49,8 +49,8 @@ export default {
         this.id = ids.reduce((a, b) => Math.max(a, b)) + 1;
       }
       this.memos.push({id: this.id, title: title, body: this.memo});
-      this.memo = '';
       this.id++;
+      this.status = 'edit';
       this.saveMemos();
     },
     saveMemos() {
