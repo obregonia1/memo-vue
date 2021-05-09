@@ -72,8 +72,11 @@ export default {
     update() {
       let title = this.memo.split('\n')[0];
       let index = this.getIndex();
-      this.memos[index] = {id: index, title: title, body: this.memo};
+      let body = this.memo
+      this.memos[index] = {id: index, title: title, body: body};
       this.saveMemos();
+      this.memo = '';
+      this.memo = body;
     },
     remove() {
       let index = this.getIndex();
