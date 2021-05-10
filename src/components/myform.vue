@@ -21,8 +21,6 @@
 
 <script>
 export default {
-  props: {
-  },
   name: "myform",
   data() {
     return {
