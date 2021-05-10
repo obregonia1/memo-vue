@@ -43,7 +43,7 @@ export default {
       if (!this.memo) {
         return;
       }
-      let title = this.memo.split('\n')[0]
+      let title = this.getTitle()
       if (this.memos[0]) {
         let ids = this.memos.map(memo => memo.id)
         this.id = ids.reduce((a, b) => Math.max(a, b)) + 1;
@@ -69,14 +69,15 @@ export default {
     getIndex() {
       return this.memos.findIndex(memo => memo.id === this.editId);
     },
+    getTitle() {
+      return this.memo.split('\n')[0]
+    },
     update() {
-      let title = this.memo.split('\n')[0];
+      let title = this.getTitle();
       let index = this.getIndex();
-      let body = this.memo
-      this.memos[index] = {id: index, title: title, body: body};
+      let updatedMemo = {id: this.editId, title: title, body: this.memo}
+      this.memos.splice(index, 1, updatedMemo);
       this.saveMemos();
-      this.memo = '';
-      this.memo = body;
     },
     remove() {
       let index = this.getIndex();
